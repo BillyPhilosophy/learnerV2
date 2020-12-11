@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+    <button @click="addObj">{{message}}</button>
+
+    </div>
+    <!-- <div id="app">
+        <example></example>
+    </div> -->
+    <!-- <ul> -->
+    <!-- <li v-for="(value,key,index) in items" :key="index" :value="value">{{key}}-{{index}}</li> -->
+    <!-- <li v-for="(item,index) in arrayData" :key="index">{{item}}</li> -->
+    <!-- </ul> -->
+
+
+    <script src="../node_modules/vue/dist/vue.js"></script>
+    <script>
+        // Vue.component('example', {
+        //     template: '<span @click="updateMessage">{{ message }}</span>',
+        //     data: function () {
+        //         return {
+        //             message: '未更新'
+        //         }
+        //     },
+        //     methods: {
+        //         updateMessage: function () {
+        //             console.log('123');
+        //             this.message = '已更新'
+        //             console.log(this.$el.textContent) // => '未更新'
+        //             this.$nextTick(function () {
+        //                 console.log(this.$el.textContent) // => '已更新'
+        //             })
+        //         }
+        //     }
+        // })
+
+        const app = new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    items: {
+                        a: 1,
+                        b: 2,
+                        c: 3
+                    },
+                    arrayData: [1, 2, 3],
+                    message: '123'
+                }
+            },
+            // template: '<div>{{ message }}</div>',
+            methods: {
+                addObj() {
+                    // this.items=Object.assign(this.items,{d:4})
+                    // this.$set(this.items, 'd', 4)
+                    // this.arrayData[1]=21
+                    // this.items.length = 2
+                    // this.$set(this.arrayData, 1, 21);
+                    // this.arrayData.splice(2)
+                    this.message='456';
+                    console.log(this.$el.textContent);
+                    this.$nextTick(()=>{
+                        console.log(this.$el.textContent);
+                    })
+                }
+            },
+        })
+        // app.message = 'new message' // 更改数据
+        // console.log( app); // false
+        // console.log( app.$el.textContent); // false
+        // Vue.nextTick(function () {
+        //     // app.$el.textContent = 'new message123'
+        //     console.log(app.$el.textContent);
+        //      // true
+        // })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>父向子通过prop通讯</title>
+</head>
+
+<body>
+    <div id="app">
+        <blog-post v-for="post in posts" :post="post" :key="post.id"></blog-post>
+    </div>
+
+    <script src="../node_modules/vue/dist/vue.js"></script>
+    <script>
+        Vue.component('blog-post', {
+            props: ['post'],
+            template: `
+            <div class='blog'>
+                <h3>{{ post.title }}</h3>
+                <div v-html='post.content'></div>
+            </div>
+            `
+        })
+        new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    posts: [{
+                            id: 1,
+                            title: 'My journey with Vue',
+                            content:'<p>this p label.1</p>'
+                        },
+                        {
+                            id: 2,
+                            title: 'Blogging with Vue',
+                            content:'<p>this p label.1</p>'
+                        },
+                        {
+                            id: 3,
+                            title: 'Why Vue is so fun',
+                            content:'<p>this p label.1</p>'
+                        }
+                    ]
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>document</title>
+</head>
+<style>
+    .demo-alert-box {
+        padding: 10px 20px;
+        background: #f3beb8;
+        border: 1px solid #f09898;
+    }
+    .red{
+        color: red;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <div :style="{ fontSize: postFontSize + 'em' }" :class="{red:false}">
+            <!-- <blog-post  v-for="post in posts" :post="post" :key="post.id" @big-font="enlargeF"></blog-post> -->
+            <component is="blog-post" v-for="post in posts" :post="post" :key="post.id" @big-font="enlargeF"></component>
+        </div>
+        <custom-input v-model="searchText"></custom-input>
+        <alert-box>
+           {{user.firstName}}
+        </alert-box>
+        <alert-box1>
+            阿斯顿
+         </alert-box1>
+         <alert-box2>
+            <template v-solt="firstTxt">
+                <h1>我是第一条具名slot</h1>
+            </template>
+            <h2>我是未具名slot</h2>
+            <template v-solt="endTxt">
+                <h1>我是最后一条具名slot</h1>
+            </template>
+         </alert-box2>
+         <current-user :user='user'>
+            {{user.firstName}}
+          </current-user>
+        <base-checkbox v-model="lovingVue"></base-checkbox>
+        <base-input v-on:focus="onFocus" v-model="textNew"></base-input>
+    </div>
+
+    <script src="vue.js"></script>
+    <script type="module">
+        // import currentUser from './user.vue';
+        // $emit('big-font',....) 第一个参数是触发的事件  可以是自定义事件也可以是 click input已定义事件
+        // 子组件向上触发绑定在子组件上的事件
+        Vue.component('blog-post', {
+            data(){
+                return{
+                    fontSize:0.1
+                }
+            },
+            props: ['post'],
+            template: `
+            <div class='blog'>
+                <h3>{{ post.title }}</h3>
+                <button @click="fangda">  
+                Enlarge text
+                </button>
+                <div v-html='post.content'></div>
+            </div>
+            `,
+            methods:{
+                fangda(){
+                    this.$emit('big-font', this.fontSize)
+                }
+            }
+        })
+        // <input v-model="searchText">等价于
+        // <input v-bind:value="searchText" v-on:input="searchText = $event.target.value">   
+        // 父元素上  form表单v-model绑定的是value，所以自定义input组件中props接受父元素的属性值也为value故props: ['value'],
+        Vue.component('custom-input', {
+            props: ['value'],
+            template: `
+                <input
+                v-bind:value="value"
+                v-on:input="$emit('input', $event.target.value)"
+                >
+            `
+        })
+        // 插槽内容
+        Vue.component('alert-box', {
+            template: `
+            <div class="demo-alert-box">
+            <strong>Error!</strong>
+            <slot></slot>
+            </div>
+        `
+        })
+        // 后备插槽
+        Vue.component('alert-box1', {
+            template: `
+            <div class="demo-alert-box">
+            <strong>Error!</strong>
+            <slot>后备</slot>
+            </div>
+        `
+        })
+        // 具名插槽
+        Vue.component('alert-box2', {
+            template: `
+            <div class="demo-alert-box">
+            <slot name="firstTxt"></slot>
+            <slot ></slot>
+            <slot name="endTxt"></slot>
+            </div>
+        `
+        })
+        // 作用域插槽
+        Vue.component('current-user', {
+            template: `
+            <div>
+                <span>
+                    <slot v-bind:user="user">{{ user.lastName }}</slot>
+                </span>
+            </div>
+        `,
+        props:['user']
+        })
+        // checkbox
+        Vue.component('base-checkbox', {
+            model: {
+                prop: 'checked',
+                event: 'change'
+            },
+            props: {
+                checked: Boolean
+            },
+            template: `
+                <input
+                type="checkbox"
+                :checked="checked"
+                @change="$emit('change', $event.target.checked)"
+                >
+            `
+        })
+        // 原生事件绑定到组件如果组件根元素是input等元素 直接v-on:focus.native="onFocus"
+        // 如果组件根元素不是input等元素
+        Vue.component('base-input', {
+            inheritAttrs: false,
+            props: ['label', 'value'],
+            computed: {
+                inputListeners: function () {
+                var vm = this
+                // `Object.assign` 将所有的对象合并为一个新对象
+                return Object.assign({},
+                    // 我们从父级添加所有的监听器
+                    this.$listeners,
+                    // 然后我们添加自定义监听器，
+                    // 或覆写一些监听器的行为
+                    {
+                    // 这里确保组件配合 `v-model` 的工作
+                    input: function (event) {
+                        vm.$emit('input', event.target.value)
+                    }
+                    }
+                )
+                }
+            },
+            template: `
+                <label>
+                {{ label }}
+                <input
+                    v-bind="$attrs"
+                    v-bind:value="value"
+                    v-on="inputListeners"
+                >
+                </label>
+            `
+        })
+        // 父级模板里的所有内容都是在父级作用域中编译的；子模板里的所有内容都是在子作用域中编译的。
+        new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    posts: [{
+                            id: 1,
+                            title: 'My journey with Vue',
+                            content: '<p>this p label.1</p>'
+                        },
+                        {
+                            id: 2,
+                            title: 'Blogging with Vue',
+                            content: '<p>this p label.1</p>'
+                        },
+                        {
+                            id: 3,
+                            title: 'Why Vue is so fun',
+                            content: '<p>this p label.1</p>'
+                        }
+                    ],
+                    searchText: '',
+                    textNew: '',
+                    lovingVue:true,
+                    postFontSize: 1,
+                    msg: 'Something bad happened.',
+                    user:{
+                        firstName:'dong',
+                        lastName:'guangchao'
+                    }
+                    // msg:''
+                }
+            },
+            methods: {
+                enlargeF(size) {
+                    console.log(size);
+                    this.postFontSize += size;
+                },
+                onFocus(){
+                    console.log('123');
+                }
+            },
+            // components:{
+            //     currentUser
+            // }
+        })
+    </script>
+</body>
+
+</html>
