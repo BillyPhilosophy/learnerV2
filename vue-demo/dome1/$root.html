@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <div>otherMsg:{{otherMsg}}</div>
+        <aaa></aaa>
+    </div>
+    <script src="vue.js"></script>
+    <script>
+        // this.$root 有点类似于store状态管理，但是在大型项目构建中不适用
+        
+        Vue.component('aaa',{
+            template:`
+            <div>{{childMsg}}</div>
+            `,
+            data(){
+                return{
+                    childMsg:this.$root.msg,
+                    otherMsg:'jiomi'
+                }
+            }
+        })
+        new Vue({
+            el:"#app",
+            data(){
+                return{
+                    msg:'haha',
+                    otherMsg:this.$root.otherMsg
+                }
+            }
+        })
+    </script>
+</body>
+</html>

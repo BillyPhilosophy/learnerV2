@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <todo-list :todos="todos">
+            <template #todo="{todo}">
+                <span v-if="todo.isComplete">✓</span>
+                {{ todo.text }}
+            </template>
+        </todo-list>
+    </div>
+</body>
+<script src="vue.js"></script>
+<script>
+    Vue.component('todo-list',{
+        template:`
+            <div>
+                <ul>
+                    <li v-for="todo in filteredTodos" :key="todo.id">
+                        <slot name="todo" :todo="todo">{{todo.text}}</slot>
+                    </li>    
+                </ul>   
+            </div>
+        `,
+        props:['todos'],
+        data(){
+            return{
+                filteredTodos:this.todos
+            }
+        }
+    })
+
+    new Vue({
+        el:'#app',
+        data(){
+            return{
+                todos:[
+                    {id:1,text:'文本1',isComplete:true},
+                    {id:2,text:'文本2',isComplete:false},
+                    {id:3,text:'文本3',isComplete:true},
+                    {id:4,text:'文本4',isComplete:true},
+                    {id:5,text:'文本5',isComplete:false},
+                    {id:6,text:'文本6',isComplete:true}
+                ]
+            }
+        },
+
+    })
+</script>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app" >
+        <h4>我是入口dom</h4>
+        <child-a :arraydata="arrayData" @getc="getDataC"></child-a>
+    </div>
+    <!-- <div id="app">
+        <example></example>
+    </div> -->
+    <!-- <ul> -->
+    <!-- <li v-for="(value,key,index) in items" :key="index" :value="value">{{key}}-{{index}}</li> -->
+    <!-- <li v-for="(item,index) in arrayData" :key="index">{{item}}</li> -->
+    <!-- </ul> -->
+
+
+    <script src="../node_modules/vue/dist/vue.js"></script>
+    <script>
+      
+        Vue.component('childA',{
+            data(){
+                return{
+                    
+                }
+            },
+            template:`
+                <div class="childA">
+                    <p>我是childA</p>
+                    <child-b v-bind="$attrs" v-on="$listeners"></child-b>
+                </div>
+            `
+        })
+        Vue.component('childB',{
+            data(){
+                return{
+
+                }
+            },
+            template:`
+                <div class="childB">
+                    <p>我是childB</p>
+                    <p>我是入口传来额的{{$attrs.arraydata[0]}}</p>
+                </div>
+            `,
+            mounted() {
+                console.log(this.$attrs);
+                this.$emit('getc', '子组件触发至入口')
+            },
+        })
+        const app = new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    items: {
+                        a: 1,
+                        b: 2,
+                        c: 3
+                    },
+                    arrayData: [1, 2, 3],
+                    message: '123'
+                }
+            },
+            // template: '<div>{{ message }}</div>',
+            methods: {
+                getDataC(val){
+                    console.log(val);
+                }
+            },
+            
+            
+        })
+        
+    </script>
+</body>
+
+</html>

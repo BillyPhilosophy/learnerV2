@@ -9,8 +9,8 @@
 
 <body>
     <div id="app">
-    <button @click="addObj">{{message}}</button>
-
+        <button @click="addObj">{{message}}</button>
+        <p @:before-enter="beforeEnter" >123</p>
     </div>
     <!-- <div id="app">
         <example></example>
@@ -69,8 +69,12 @@
                     this.$nextTick(()=>{
                         console.log(this.$el.textContent);
                     })
+                },
+                beforeEnter(el){
+                    console.log(el);
                 }
             },
+            
         })
         // app.message = 'new message' // 更改数据
         // console.log( app); // false

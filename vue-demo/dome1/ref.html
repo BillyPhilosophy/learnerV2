@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <base-input ref="usernameInput"></base-input>
+        <!-- <input type="text"> -->
+        <!-- <div ref="text"></div> -->
+    </div>
+    <script src="vue.js"></script>
+    <script>
+        
+        Vue.component('base-input',{
+            template:`
+            <input>
+            `,
+            data(){
+                return{
+                    test:{a:1}
+                }
+            },
+            methods:{
+                getTest(){
+                    return this.test.a;
+                }
+            }
+        })
+        new Vue({
+            el:"#app",
+            data(){
+                return{
+                    msg:'haha'
+                }
+            },
+            mounted() {
+                console.log(this.$refs.usernameInput.getTest())
+            },
+            methods: {
+               
+            },
+        })
+    </script>
+</body>
+</html>

@@ -31,16 +31,23 @@
             阿斯顿
          </alert-box1>
          <alert-box2>
-            <template v-solt="firstTxt">
+            <template #header>
                 <h1>我是第一条具名slot</h1>
             </template>
-            <h2>我是未具名slot</h2>
-            <template v-solt="endTxt">
+            <template #default>
+                <h2>我是未具名slot</h2>
+            </template>
+            <template #footer>
                 <h1>我是最后一条具名slot</h1>
             </template>
          </alert-box2>
-         <current-user :user='user'>
+         <!-- <current-user :user='user'>
             <a href="javascript:;" ></a>
+          </current-user> -->
+          <current-user :haha="user">
+            <template #default="slotProps">
+              {{ slotProps.test[0] }}
+            </template>
           </current-user>
         <base-checkbox v-model="lovingVue"></base-checkbox>
         <base-input v-on:focus="onFocus" v-model="textNew"></base-input>
@@ -107,23 +114,42 @@
         Vue.component('alert-box2', {
             template: `
             <div class="demo-alert-box">
-            <slot name="firstTxt"></slot>
-            <slot ></slot>
-            <slot name="endTxt"></slot>
+                <header> <slot name="header"></slot></header>
+                <main><slot ></slot></main>
+                <footer> <slot name="footer"></slot></footer>
             </div>
         `
         })
         // 作用域插槽
+        // Vue.component('current-user', {
+        //     template: `
+        //     <div>
+        //         <span>
+        //             <slot v-bind:user="user">{{ user.lastName }}</slot>
+        //         </span>
+        //     </div>
+        // `,
+        // props:['user']
+        // })
+        // 因为只有 <current-user> 组件可以访问到 user 而我们提供的内容是在父级渲染的。为了让 user 在父级的插槽内容中可用，我们可以将 user 作为 <slot> 元素的一个 attribute 绑定上去
+        // 1.重点是slotProps接取子组件里:user="user" :test="test"类似属性的数据   
         Vue.component('current-user', {
             template: `
             <div>
                 <span>
-                    <slot v-bind:user="user">{{ user.lastName }}</slot>
+                    <slot :user="user" :test="test">{{user.lastName}}</slot>
                 </span>
             </div>
         `,
-        props:['user']
-        })
+        props:['haha'],
+        data(){
+            return{
+                user:this.haha,
+                test:[1,23,4]
+            }
+        }
+        });
+
         // checkbox
         Vue.component('base-checkbox', {
             model: {
